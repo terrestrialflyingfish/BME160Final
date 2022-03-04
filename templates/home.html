@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>BME 160 Final</title>
+
+    <!-- Custom fonts for this template-->
+   
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="static/d.min.css" rel="stylesheet">
+    <link href="static/modules/range/range.css" rel="stylesheet">
+    <script src='static/chart.min.js'></script>
+    <script>
+        function testSeqs(){
+    const seq = "MSIKPEEISSLIKQQIESFQSDVQVQDVGTVIRVGDGIALAHGLENVMAGELLEFSNGVMGMAQNLEENNIGIIILGPYTDIREGDEVKRTGRIMEVPVGEELLGRVVNPLGQPIDGLGPIATTKSRPIESPAPGVMDRKSVHEPLQTGIKSIDTMIPIGRGQRELIIGDRQTGKTAIAIDTILNQKDEDMICIYVAIGQKDSTVAGVVETLRQRGALDYTIVVSASASDPAPMLFLAPYAGVSMGEEFMYNGKHVLVIYDDLSKQASAYRELSLLLRRPPGREAFPGDVFYLHSRLLERAAKLSDAKGGGSITALPFIETQAGDVSAYIPTNVISITDGQIFLQSDLFYSGIRPAVNAGLSVSRVGGSAQIKAMKKVSGTLRLDLAAYRELEAFAQFGSDLDKATQAKLNRGQRTVEVLKQDLHNPLPVEKQVAIIYALTKGFMDDIPVEDVQRFESEFFTFLDHNKKDLLDHIRTTGNLPEDADFKAAIEEFKKGFSASK,MNLRPEEISKVIKEQILQYEHKLETADVGTVIQVGDGIARIHGLENAMAGELLEFPQEVFGMVLNLEEDNVGCVLLGDDTKIVEGDKVKCTGKIVEVPVGDAMVGRVVNSLGHPIDGKGPISTNKTRPAEVKAPGVIERKSVDTPLQTGYKAIDSMIPIGRGQRELIIGDRQTGKTALAVDTMINQKGEDVICIYVAIGQKASTVAQIVSKLQETGAMDYSIVVAATASELAPLQYLAPYTGVTIGEEFMLQGKDVLIIYDDLSKHAVAYRAMSLLLKRPPGREAYPGDVFYLHSRLLERAAKMKDGGSLTALPIIETQAGDVSAYIPTNVISITDGQIFLEGELFYSGIRPAVNPGISVSRVGGAAQIKSMKKVAGPLRIEYAQYRELASFAQFGSDLDDATKAQLAKGERVVELLKQDQYAPMRVEHQVLAIYAITNDYAAKVPVNMIKDYEKSLIEFADVNHKDTLEEIKGKGGLSEEVVEKMRELIEKFTGKYLDELKNA,MKLNPSEISELIKRRIESFDAVAEARNEGTVVSVSDGICRIHGLADAMFGEMLEFPGNTYGMALNLERDSVGAVLLGEYEHISEGDTVKCTGRILEVPVGEGLLGRVVDALGAPSDGKGPIKSEGTEPIEKVAPGVITRQGVDQPVQTGLKAIDSMVPVGRGQRELIIGDRQTGKTAVAIDTIINQRDSGIKCIYVAIGQKNSTVANVVRKLEEHGAMENTIVVSAPAADSAAMQYIAAYAGCAMGEYFRDRGEDALIVYDDLTKQAWAYRQVSLLLRRPPGREAYPGDVFYLHSRLLERAARINAEEVERRTNGQVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIYLETDLFNSGIRPAINAGLSVSRVGGSAQTKVIKKLGGTVRLSLAQYRELAAFAQFASDLDEATRAQLERGQRTMELMKQAQYQPLSVGEMAFVLFAGNEGYVDDVALDEVVRFEKALLDYLRSEHSELLQKITETGDYNDEIHSGMQQAMEQFKKNRTW,MSQLKLEEISSVIEEKIKNFELDCDMAEVGKVVSYADGVAKVYGLNGVMSYEVLEFETGDKGVAANLEEDSVGVIVFGFGNNIKEGAGVKRTKSLMKIPVGDAVVGRVLNALGEPIDGKGEIETNEFSLIEQKAPGIMDRKSVHEPLQTGIKAIDALVPIGRGQRELIIGDKQTGKTTVAIDAIINQKGQNVICIYVAIGQKESTVAQVVRKLEEYGAMEYSVVINASASDSAAMQYLAPYSGVAMGEYFRDHGRHALIVYDDLSKHAVAYREISLILRRPPGREAFPGDVFYIHSRLLERAAKLCDEKGAGSLTALPIVETQAGDVSAYIPTNIISITDGQIFLETDLFYSGIRPAINVGLSVSRVGGAAQIKATKQVSGTLRLDLAQYRELQAFTQFASDLDEASKKQLERGQRMVEVLKQAPYSPLPIEKQVVIIYAGAKGFLDSVSVKKVVDFEEQLHPFLEAKYPQILEEIYTKKALDKDLEAMLRKVLEEFKLTYSE,MQLNSTEISELIKQRIAQFNVVSEAHNEGTIVSVSDGVIRIHGLADCMQGEMISLPGNRYAIALNLERDSVGAVVMGPYADLAEGMKVKCTGRILEVPVGRGLLGRVVNTLGAPIDGKGPLDHDGFSAVEAIAPGVIERQSVDQPVQTGYKAVDSMIPIGRGQRELIIGDRQTGKTALAIDAIINQRDSGIKCIYVAIGQKASTISNVVCKLEEHGALANTIVVVATASESAALQYLAPYAGCAMGEYFRDRGEDALIIYDDLSKQAVAYRQISLLLRRPPGREAFPGDVFYLHSRLLERAARVNAEYVEAFTKGEVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIFLETNLFNAGIRPAVNPGISVSRVGGAAQTKIMKKLSGGIRTALAQYRELAAFSQFASDLDDATRKQLDHGQKVTELLKQKQYAPMSVAQQSLVLFAAERGYLADVELSKIGSFEAALLAYVDRDHAPLMQEINQTGGYNDEIEGKLKGILDSFKATQSW,MQLNSTEISDLIKQRIESFEVVSEARNEGTIVSVSDGIIRIHGLADVMQGEMIELPGGRYALALNLERDSVGAVVMGPYADLKEGMKVTGTGRILEVPVGPELLGRVVNTLGEPIDGKGPIEAKMTSPVEVIAPGVIDRKSVDQPVQTGYKSVDSMIPIGRGQRELIIGDRQIGKTALAIDAIINQKDSGIFSIYVAIGQKASTIANVVRKLEEHGALQNTIVVVASASESAALQYLAPYAGCAMGEYFRDRGEDALIVYDDLSKQAVAYRQISLLLKRPPGREAFPGDVFYLHSRLLERAARVNEEYVERFTNGEVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIFLQTELFNAGVRPAVDPGISVSRVGGSAQTKIIKKLSGGIRTALAAYRELAAFAQFSSDLDEATKKQLDHGQKVTELMKQKQYAPMSVFDQALTIFAAERGYLDDVELNKVLDFEAALLSYARGQYAELAAEIDKSGAYNDEIEAQLKKLTDDFKATQTW,MEIRPAEISEILKKQIASFDTETDVAETGQVLSVGDGIARVFGLANVMAGEMVEFPNAGVQGMALNLENDNVGVVVFGDDKAIREGDTVTRTRRIVDVPVGKGLLGRVVDALGNPIDGKGPIEATERRLVETKAPGIIPRKSVHEPMQTGVKSIDALIPIGRGQRELVIGDRQTGKTAIIVDTFINQKPLNAQDDESKKLYCIYVAVGQKRSTVAQLVRTLEENGAMEYSIVIAATASEPAPMQFLAPYTGCAMGEYFRDNGMHALIVYDDLSKQAVAYRQMSLLLRRPPGREAYPGDVFYLHSRLLERAAKMSDEFGAGSLTALPVIETQAGDISAYIPTNVISITDGQIFLETELFFKGIRPAVNVGNSVSRVGSAAQIKAMKQVAGKIKLDLAQYREMAAFAQFASDLDASTQKLLARGARLTELLKQPQFKPLPVEEQVVSIFVGTRGYLDEVPVNRIGDFEAQLISEMKARSPEILDSIRNDREIKKETETKLVDFVKSFASSFA,MQQLNPSEISELIRARIAGFEGRVETRSQGTIISLSDGILRIHGLEDVMYGEMLELPGGRFGLAMNLEQDNVGAVVLGEFSGLQEGDVVKCTGRVMQVPIGKALLGRVVNALGQPVDGKGAIDAEEFDVLEKIAPGVIDRQSVDEPMQTGIKSIDAMVPIGRGQRELIIGDRQTGKTAVAVDAILNQKGKDVQCIYVAIGQKASTVAGVVRKLEEYGAMEYTTVIAANASESAAMQYLAPYAGCTMGEYFRDRGMNALIVYDDLTKQAWAYRQISLLLRRPPGREAYPGDVFYLHSRLLERAARVNADFVEKFTKGEVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIYLETDLFNAGIRPAINAGLSVSRVGGAAQTKIIKKLGGGIRLDLAQYRELAAFAQFASDLDEITRKQIERGKRVTELLKQDQFSPMSVAEQGAALFAASSGALDDVEVANVRPFEKALLAYLNSNNKELMAGIEEKKDLTDDLKKQLDAAVKQFKSGSTY,MSIRPDEISAILKDEIENYHISTELSEAGVVLSVGDGISRIYGLRDCMSGELLEFDNNVFGMALNLEQDNVGCVILGDDQGIKEGDRVRRTGRVVEVPVGEALIGRVVSALGQPIDGRGPIATDVYRPVEYPAPGIIDRQPVDTPIQTGLKAIDAMIPIGRGQRELIIGDRSTGKTALAIDTILNQRDQDVICIYVGIGQKESTIAGIVRVLEERGAMGYTIVVAASAAEPAPLQYLAPYAGCAMGEEFRDKGRDVLVVYDDLSKHAVAYRAMSLLLRRPPGREAYPGDVFYLHSRLLERAARISDEKGGGSLTALPIIETLAGDIGAYIPTNVISITDGQIFLETDLFFSGVRPAVNVGLSVSRVGGAAQIKAMRQVAGGMRLDLAQYRELAAFSQFGSDLDKATQARLARGARTVELLKQAQYQPMSVEDQVAVIFAVTKGFVDDIPVESVRDFERGLLRFLKEQRPQILDTIRREQALSDDVVRDLTQAIEEFKKTAVF"
+            return seq
+
+        }
+        
+        async function fetchData(urlStr){
+            const res = await fetch(urlStr)
+            return await res.json()
+        }
+        function makeNewChart(chartData){
+            const ctx = document.getElementById('groupsChart');
+            var dataParams = {
+                labels: chartData.labels,
+                datasets: [{
+                    label: chartData.species,
+                    data: chartData.val,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0
+                }]
+            };
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: dataParams,
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: chartData.title
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        text: "Amino Acid Pos",
+                        color: "rgb(0,0,0)",
+                        beginAtZero: true
+                    },
+                    y: {
+                        display: true,
+                        text: "Charge",
+                        color: "rgb(0,0,0)",
+                        beginAtZero: false
+                    }
+                }
+            }
+            });
+            window.chart = myChart
+        }
+        function changePH(){
+            var pH = document.getElementById("phSlider").value;
+            console.log(pH);
+        }
+    </script>
+    <script>
+    function addData(chart, label, data) {
+        chart.data.labels.push(label);
+        chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+        });
+    chart.update();
+    }
+
+    function removeData(chart) {
+        chart.data.labels.pop();
+        chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+        chart.update();
+    }
+    
+    fetchData("/api?ph=6&seqs="+testSeqs())
+            .then((data) => {
+                chartData = data;
+                makeNewChart(chartData);
+            })
+            .catch((error) => {
+                console.log(JSON.stringify(error));
+                console.error('Error:', error);
+                chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
+            });
+    </script>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center">
+                <div class="sidebar-brand-text mx-3">Test</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Options</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Interface
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+         
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Addons
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+            
+            </li>
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="charts.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Charts</span></a>
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Search -->
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Protein Graphs</h1>
+                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                class="fas fa-download fa-sm text-white-50"></i>Download Graphs Pdf</a>
+                    </div>
+
+
+                    <!-- Content Row -->
+
+                    <div class="row">
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Protein Groups</h6>
+                                    
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <label for="customRange1" class="form-label">
+                                        pH
+                                    </label>
+                                    <input type="range" min=0 max=14 class="form-range" id="phSlider" onchange="changePH()"/>
+                                    <div class="chart-area">
+                                        <canvas id="groupsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Idk Really</h6>
+                                </div>
+                                <!-- Card Body  (Chart over here)-->
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="unsureChart"></canvas>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright 2022 (I wish)</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+ </div>
