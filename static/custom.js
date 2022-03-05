@@ -47,15 +47,26 @@ function testSeqs(){
             const ctx = document.getElementById(id);
             var dataParams = {
                 datasets: [{
-                    label: "Legend",
+                    label: "Group 1",
                     labels: chartData.labels,
                     data: chartData.val,
-                    backgroundColor: "rgb(255, 99, 132)"
+                    backgroundColor: "rgb(255, 99, 132)",
+                    borderColor: "rgb(255, 99, 132)"
+                },
+                {
+                    label: "Group 2",
+                    labels: ["hmmm","lop"],
+                    data: [{x: 1, y: 0},{x: -2, y: -3}],
+                    borderColor: "rgb(132, 99, 255)",
+                    backgroundColor: "rgb(132, 99, 255)"
                 }]
             };
             let options = {
                 maintainAspectRatio: false,
                 plugins: {
+                    legend: {
+                        position: 'top',
+                    },
                     title: {
                         display: true,
                         text: chartData.title
