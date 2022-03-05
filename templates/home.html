@@ -21,87 +21,46 @@
     <link href="static/d.min.css" rel="stylesheet">
     <link href="static/modules/range/range.css" rel="stylesheet">
     <script src='static/chart.min.js'></script>
+    <script src='static/custom.js'></script>
     <script>
-        function testSeqs(){
-    const seq = "MSIKPEEISSLIKQQIESFQSDVQVQDVGTVIRVGDGIALAHGLENVMAGELLEFSNGVMGMAQNLEENNIGIIILGPYTDIREGDEVKRTGRIMEVPVGEELLGRVVNPLGQPIDGLGPIATTKSRPIESPAPGVMDRKSVHEPLQTGIKSIDTMIPIGRGQRELIIGDRQTGKTAIAIDTILNQKDEDMICIYVAIGQKDSTVAGVVETLRQRGALDYTIVVSASASDPAPMLFLAPYAGVSMGEEFMYNGKHVLVIYDDLSKQASAYRELSLLLRRPPGREAFPGDVFYLHSRLLERAAKLSDAKGGGSITALPFIETQAGDVSAYIPTNVISITDGQIFLQSDLFYSGIRPAVNAGLSVSRVGGSAQIKAMKKVSGTLRLDLAAYRELEAFAQFGSDLDKATQAKLNRGQRTVEVLKQDLHNPLPVEKQVAIIYALTKGFMDDIPVEDVQRFESEFFTFLDHNKKDLLDHIRTTGNLPEDADFKAAIEEFKKGFSASK,MNLRPEEISKVIKEQILQYEHKLETADVGTVIQVGDGIARIHGLENAMAGELLEFPQEVFGMVLNLEEDNVGCVLLGDDTKIVEGDKVKCTGKIVEVPVGDAMVGRVVNSLGHPIDGKGPISTNKTRPAEVKAPGVIERKSVDTPLQTGYKAIDSMIPIGRGQRELIIGDRQTGKTALAVDTMINQKGEDVICIYVAIGQKASTVAQIVSKLQETGAMDYSIVVAATASELAPLQYLAPYTGVTIGEEFMLQGKDVLIIYDDLSKHAVAYRAMSLLLKRPPGREAYPGDVFYLHSRLLERAAKMKDGGSLTALPIIETQAGDVSAYIPTNVISITDGQIFLEGELFYSGIRPAVNPGISVSRVGGAAQIKSMKKVAGPLRIEYAQYRELASFAQFGSDLDDATKAQLAKGERVVELLKQDQYAPMRVEHQVLAIYAITNDYAAKVPVNMIKDYEKSLIEFADVNHKDTLEEIKGKGGLSEEVVEKMRELIEKFTGKYLDELKNA,MKLNPSEISELIKRRIESFDAVAEARNEGTVVSVSDGICRIHGLADAMFGEMLEFPGNTYGMALNLERDSVGAVLLGEYEHISEGDTVKCTGRILEVPVGEGLLGRVVDALGAPSDGKGPIKSEGTEPIEKVAPGVITRQGVDQPVQTGLKAIDSMVPVGRGQRELIIGDRQTGKTAVAIDTIINQRDSGIKCIYVAIGQKNSTVANVVRKLEEHGAMENTIVVSAPAADSAAMQYIAAYAGCAMGEYFRDRGEDALIVYDDLTKQAWAYRQVSLLLRRPPGREAYPGDVFYLHSRLLERAARINAEEVERRTNGQVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIYLETDLFNSGIRPAINAGLSVSRVGGSAQTKVIKKLGGTVRLSLAQYRELAAFAQFASDLDEATRAQLERGQRTMELMKQAQYQPLSVGEMAFVLFAGNEGYVDDVALDEVVRFEKALLDYLRSEHSELLQKITETGDYNDEIHSGMQQAMEQFKKNRTW,MSQLKLEEISSVIEEKIKNFELDCDMAEVGKVVSYADGVAKVYGLNGVMSYEVLEFETGDKGVAANLEEDSVGVIVFGFGNNIKEGAGVKRTKSLMKIPVGDAVVGRVLNALGEPIDGKGEIETNEFSLIEQKAPGIMDRKSVHEPLQTGIKAIDALVPIGRGQRELIIGDKQTGKTTVAIDAIINQKGQNVICIYVAIGQKESTVAQVVRKLEEYGAMEYSVVINASASDSAAMQYLAPYSGVAMGEYFRDHGRHALIVYDDLSKHAVAYREISLILRRPPGREAFPGDVFYIHSRLLERAAKLCDEKGAGSLTALPIVETQAGDVSAYIPTNIISITDGQIFLETDLFYSGIRPAINVGLSVSRVGGAAQIKATKQVSGTLRLDLAQYRELQAFTQFASDLDEASKKQLERGQRMVEVLKQAPYSPLPIEKQVVIIYAGAKGFLDSVSVKKVVDFEEQLHPFLEAKYPQILEEIYTKKALDKDLEAMLRKVLEEFKLTYSE,MQLNSTEISELIKQRIAQFNVVSEAHNEGTIVSVSDGVIRIHGLADCMQGEMISLPGNRYAIALNLERDSVGAVVMGPYADLAEGMKVKCTGRILEVPVGRGLLGRVVNTLGAPIDGKGPLDHDGFSAVEAIAPGVIERQSVDQPVQTGYKAVDSMIPIGRGQRELIIGDRQTGKTALAIDAIINQRDSGIKCIYVAIGQKASTISNVVCKLEEHGALANTIVVVATASESAALQYLAPYAGCAMGEYFRDRGEDALIIYDDLSKQAVAYRQISLLLRRPPGREAFPGDVFYLHSRLLERAARVNAEYVEAFTKGEVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIFLETNLFNAGIRPAVNPGISVSRVGGAAQTKIMKKLSGGIRTALAQYRELAAFSQFASDLDDATRKQLDHGQKVTELLKQKQYAPMSVAQQSLVLFAAERGYLADVELSKIGSFEAALLAYVDRDHAPLMQEINQTGGYNDEIEGKLKGILDSFKATQSW,MQLNSTEISDLIKQRIESFEVVSEARNEGTIVSVSDGIIRIHGLADVMQGEMIELPGGRYALALNLERDSVGAVVMGPYADLKEGMKVTGTGRILEVPVGPELLGRVVNTLGEPIDGKGPIEAKMTSPVEVIAPGVIDRKSVDQPVQTGYKSVDSMIPIGRGQRELIIGDRQIGKTALAIDAIINQKDSGIFSIYVAIGQKASTIANVVRKLEEHGALQNTIVVVASASESAALQYLAPYAGCAMGEYFRDRGEDALIVYDDLSKQAVAYRQISLLLKRPPGREAFPGDVFYLHSRLLERAARVNEEYVERFTNGEVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIFLQTELFNAGVRPAVDPGISVSRVGGSAQTKIIKKLSGGIRTALAAYRELAAFAQFSSDLDEATKKQLDHGQKVTELMKQKQYAPMSVFDQALTIFAAERGYLDDVELNKVLDFEAALLSYARGQYAELAAEIDKSGAYNDEIEAQLKKLTDDFKATQTW,MEIRPAEISEILKKQIASFDTETDVAETGQVLSVGDGIARVFGLANVMAGEMVEFPNAGVQGMALNLENDNVGVVVFGDDKAIREGDTVTRTRRIVDVPVGKGLLGRVVDALGNPIDGKGPIEATERRLVETKAPGIIPRKSVHEPMQTGVKSIDALIPIGRGQRELVIGDRQTGKTAIIVDTFINQKPLNAQDDESKKLYCIYVAVGQKRSTVAQLVRTLEENGAMEYSIVIAATASEPAPMQFLAPYTGCAMGEYFRDNGMHALIVYDDLSKQAVAYRQMSLLLRRPPGREAYPGDVFYLHSRLLERAAKMSDEFGAGSLTALPVIETQAGDISAYIPTNVISITDGQIFLETELFFKGIRPAVNVGNSVSRVGSAAQIKAMKQVAGKIKLDLAQYREMAAFAQFASDLDASTQKLLARGARLTELLKQPQFKPLPVEEQVVSIFVGTRGYLDEVPVNRIGDFEAQLISEMKARSPEILDSIRNDREIKKETETKLVDFVKSFASSFA,MQQLNPSEISELIRARIAGFEGRVETRSQGTIISLSDGILRIHGLEDVMYGEMLELPGGRFGLAMNLEQDNVGAVVLGEFSGLQEGDVVKCTGRVMQVPIGKALLGRVVNALGQPVDGKGAIDAEEFDVLEKIAPGVIDRQSVDEPMQTGIKSIDAMVPIGRGQRELIIGDRQTGKTAVAVDAILNQKGKDVQCIYVAIGQKASTVAGVVRKLEEYGAMEYTTVIAANASESAAMQYLAPYAGCTMGEYFRDRGMNALIVYDDLTKQAWAYRQISLLLRRPPGREAYPGDVFYLHSRLLERAARVNADFVEKFTKGEVKGKTGSLTALPIIETQAGDVSAFVPTNVISITDGQIYLETDLFNAGIRPAINAGLSVSRVGGAAQTKIIKKLGGGIRLDLAQYRELAAFAQFASDLDEITRKQIERGKRVTELLKQDQFSPMSVAEQGAALFAASSGALDDVEVANVRPFEKALLAYLNSNNKELMAGIEEKKDLTDDLKKQLDAAVKQFKSGSTY,MSIRPDEISAILKDEIENYHISTELSEAGVVLSVGDGISRIYGLRDCMSGELLEFDNNVFGMALNLEQDNVGCVILGDDQGIKEGDRVRRTGRVVEVPVGEALIGRVVSALGQPIDGRGPIATDVYRPVEYPAPGIIDRQPVDTPIQTGLKAIDAMIPIGRGQRELIIGDRSTGKTALAIDTILNQRDQDVICIYVGIGQKESTIAGIVRVLEERGAMGYTIVVAASAAEPAPLQYLAPYAGCAMGEEFRDKGRDVLVVYDDLSKHAVAYRAMSLLLRRPPGREAYPGDVFYLHSRLLERAARISDEKGGGSLTALPIIETLAGDIGAYIPTNVISITDGQIFLETDLFFSGVRPAVNVGLSVSRVGGAAQIKAMRQVAGGMRLDLAQYRELAAFSQFGSDLDKATQARLARGARTVELLKQAQYQPMSVEDQVAVIFAVTKGFVDDIPVESVRDFERGLLRFLKEQRPQILDTIRREQALSDDVVRDLTQAIEEFKKTAVF"
-            return seq
-
-        }
-        
-        async function fetchData(urlStr){
-            const res = await fetch(urlStr)
-            return await res.json()
-        }
-        function makeNewChart(chartData){
-            const ctx = document.getElementById('groupsChart');
-            var dataParams = {
-                labels: chartData.labels,
-                datasets: [{
-                    label: chartData.species,
-                    data: chartData.val,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0
-                }]
-            };
-            const myChart = new Chart(ctx, {
-                type: 'line',
-                data: dataParams,
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: chartData.title
-                    }
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        text: "Amino Acid Pos",
-                        color: "rgb(0,0,0)",
-                        beginAtZero: true
-                    },
-                    y: {
-                        display: true,
-                        text: "Charge",
-                        color: "rgb(0,0,0)",
-                        beginAtZero: false
-                    }
-                }
-            }
-            });
-            window.chart = myChart
-        }
-        function changePH(){
-            var pH = document.getElementById("phSlider").value;
-            console.log(pH);
-        }
-    </script>
-    <script>
-    function addData(chart, label, data) {
-        chart.data.labels.push(label);
-        chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-        });
-    chart.update();
-    }
-
-    function removeData(chart) {
-        chart.data.labels.pop();
-        chart.data.datasets.forEach((dataset) => {
-        dataset.data.pop();
-    });
-        chart.update();
-    }
-    
-    fetchData("/api?ph=6&seqs="+testSeqs())
+    function changePH(phSlider,lenSlider,graph,chart,type,api){
+        var pH = document.getElementById(phSlider).value;
+        var fragLen = document.getElementById(lenSlider).value;
+        fetchData("/"+api+"?ph="+pH.toString()+"&seqs="+testSeqs()+"&fraglen="+fragLen.toString())
             .then((data) => {
                 chartData = data;
-                makeNewChart(chartData);
+                window[chart].destroy()
+                window[chart] = makeNewChart(chartData, graph, type);
             })
             .catch((error) => {
-                console.log(JSON.stringify(error));
+                console.error('Error:', error);
+                chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
+            });
+    }
+    function changeLen(phSlider,lenSlider,graph,chart,type,api){
+        var pH = document.getElementById(phSlider).value;
+        var fragLen = document.getElementById(lenSlider).value;
+        fetchData("/"+api+"?ph="+pH.toString()+"&seqs="+testSeqs()+"&fraglen="+fragLen.toString())
+            .then((data) => {
+                chartData = data;
+                chart = chart
+                window[chart].destroy()
+                window[chart] = makeNewChart(chartData, graph, type);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
+            });
+    }
+    
+    Promise.all([fetchData("/api?ph=7&seqs="+testSeqs()+"&fraglen=15"),fetchData("/group?ph=7&seqs="+testSeqs()+"&fraglen=15")])
+            .then((data) => {
+                phData = data[0];
+                groupsData = data[1];
+                window.phchart = makeNewChart(phData, "phGraph", "line");
+                window.groupchart = makeNewChart(groupsData, "groupsChart", "scatter");
+            })
+            .catch((error) => {
                 console.error('Error:', error);
                 chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
             });
@@ -229,39 +188,52 @@
                     <div class="row">
 
                         <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
+                        <div class="col-xl-12 col-lg-12">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Protein Groups</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Protein Charges</h6>
                                     
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <label for="customRange1" class="form-label">
+                                    <label for="lenSlider" class="form-label">
+                                        Fragment Length
+                                    </label>
+                                    <input type="range" min=1 max=30 class="form-range" id="lenSlider" onchange='changeLen("phSlider","lenSlider","phGraph","phchart","line","api")'/>
+                                    <label for="phSlider" class="form-label">
                                         pH
                                     </label>
-                                    <input type="range" min=0 max=14 class="form-range" id="phSlider" onchange="changePH()"/>
+                                    <input type="range" min=0 max=14 class="form-range" id="phSlider" onchange='changePH("phSlider","lenSlider","phGraph","phchart","line","api")'/>
                                     <div class="chart-area">
-                                        <canvas id="groupsChart"></canvas>
+                                        <canvas id="phGraph"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row">
                         <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
+                        <div class="col-xl-12 col-lg-12">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Idk Really</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Protein Clusters</h6>
                                 </div>
                                 <!-- Card Body  (Chart over here)-->
                                 <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="unsureChart"></canvas>
+                                    <label for="lenSlider2" class="form-label">
+                                        Fragment Length
+                                    </label>
+                                    <input type="range" min=1 max=30 class="form-range" id="lenSlider2" onchange='changeLen("phSlider2","lenSlider2","groupsChart","groupchart","scatter","group")'/>
+                                    <label for="phSlider2" class="form-label">
+                                        pH
+                                    </label>
+                                    <input type="range" min=0 max=14 class="form-range" id="phSlider2" onchange='changePH("phSlider2","lenSlider2","groupsChart","groupchart","scatter","group")'/>
+                                    <div class="chart-area">
+                                        <canvas id="groupsChart"></canvas>
                                     </div>
                                     
                                 </div>
