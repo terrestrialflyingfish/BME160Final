@@ -3,16 +3,25 @@ from flask import render_template
 from flask import jsonify
 from flask import request
 from datetime import time
-from graphHelp import dataGen
-
-app = Flask(__name__)
-datagen = dataGen()
+from graphHelp import DataGen
+from graphHelp import ml
+import random
+import numpy as np
+class CustomFlask(Flask):
+    jinja_options = Flask.jinja_options.copy()
+    jinja_options.update(dict(
+    block_start_string='(%',
+    block_end_string='%)',
+    variable_start_string='((',
+    variable_end_string='))',
+    comment_start_string='(#',
+    comment_end_string='#)',
+  ))
+app = CustomFlask(__name__)
+datagen = DataGen()
+mL = ml()
 @app.route("/")
 def chart():
-    '''s
-    legend = 'Monthly Data'sbdd", "une", "July", "August"]n
-    chartData = {"title": lekgjend,l "lah\ls":n laenls, "val": values}
-    '''
     return render_template('home.html')
 
 @app.route("/api")
@@ -39,32 +48,36 @@ def groupProt():
         seqList = request.args.get("seqs").split(",")
         ph = request.args.get("ph")
         fragLen = request.args.get("fraglen")
+        labels = ["Alkalihalobacillus pseudofirmus","Alkalibacter_saccharofermentans","Halorhodospira halochloris","Helicobacter pylori","Escherichia coli","Vibrio alginolyticus","Acidiphilium cryptum","Acidithiobacillus ferrooxidans","Sulfobacillus acidophilus"]
+
+        for zz in range(100):
+            tesList = list(seqList[int(np.floor(zz/5))])
+            tesList[zz+zz:zz+zz+16] = list(seqList[int(np.floor(zz/4))])[zz+zz:zz+zz+16]
+            asdf = list(seqList[int(np.floor(zz/6))])[zz+zz+38:zz+zz+60]
+            random.shuffle(asdf)
+            tesList[zz+zz+38:zz+zz+60] = asdf
+            tesList[zz+zz+100:zz+zz+134] = list(seqList[int(np.floor(zz/3.5))])[zz+zz+100:zz+zz+134]
+            tesList[zz+zz+200:zz+zz+234] = list(seqList[int(np.floor(zz+2/5.5))])[zz+zz+200:zz+zz+234]
+            seqList.append(''.join(tesList))
+            labels.append("test"+str(zz))
         allPhs = [datagen.phs(sq,pH=ph,l=fragLen) for sq in seqList]
-        x,y = datagen.pca(allPhs)
+        
+        x,y,points = datagen.pca(allPhs)
         x = [xx for xx in x]
         y = [yy for yy in y]
-        datapoints = [{"x": float(x[i]), "y": float(y[i])} for i in range(len(x))]
+        groupLabels = []
+        clusters = mL.getClusters(points, 3)
+        datapoints = []
+        for it in range(3):
+            curPoints = [{"x": float(x[i]), "y": float(y[i])} for i in range(len(x)) if clusters[i] == int(it)]
+            thisLabels = [labels[i] for i in range(len(x)) if clusters[i] == int(it)]
+            datapoints.append(curPoints)
+            groupLabels.append(thisLabels)
         title = "Protein Clusters at pH {}".format(str(ph))
-        name = "Group 1"
-        labels = ["Alkalihalobacillus pseudofirmus","Alkalibacter_saccharofermentans","Halorhodospira halochloris","Helicobacter pylori","Escherichia coli","Vibrio alginolyticus","Acidiphilium cryptum","Acidithiobacillus ferrooxidans","Sulfobacillus acidophilus"]
-        chartData = {"title": title, "labels": labels, "val": datapoints, "species": name}
+        colors = datagen.colors(3)
+        groups = ["Group1","Group2","Group3","Group4","Group5"]
+        chartData = {"title": title, "labels": groupLabels, "val": datapoints, "groups": groups, "colors": colors}
     else:
         chartData = {"title": "oh no something iss wrong", "labels": ["err"], "val": [404]}
     return jsonify(chartData)    
-    
-@app.route("/apii", methods=["GET"])
-def returnChartData():
-    chartData = {}
-    if (request.method == "GET"):
-        legend = request.args.get("title")
-        #'Monthly Data'
-        labels = request.args.get("labels").split(",")
-        #["J","F","M","A","M"]h
-        values = request.args.get("val").split(",")
-        #[10,25,17,21,30]
-        chartData = {"title": legend, "labels": labels, "val": values}
-    else:
-        chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
-    return jsonify(chartData)
-if __name__ == "__main__":
-    app.run(debug=True)
+   

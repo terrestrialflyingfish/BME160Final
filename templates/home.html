@@ -12,7 +12,7 @@
     <title>BME 160 Final</title>
 
     <!-- Custom fonts for this template-->
-   
+
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -20,55 +20,14 @@
     <!-- Custom styles for this template-->
     <link href="static/d.min.css" rel="stylesheet">
     <link href="static/modules/range/range.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
     <script src='static/chart.min.js'></script>
-    <script src='static/custom.js'></script>
-    <script>
-    function changePH(phSlider,lenSlider,graph,chart,type,api){
-        var pH = document.getElementById(phSlider).value;
-        var fragLen = document.getElementById(lenSlider).value;
-        fetchData("/"+api+"?ph="+pH.toString()+"&seqs="+testSeqs()+"&fraglen="+fragLen.toString())
-            .then((data) => {
-                chartData = data;
-                window[chart].destroy()
-                window[chart] = makeNewChart(chartData, graph, type);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
-            });
-    }
-    function changeLen(phSlider,lenSlider,graph,chart,type,api){
-        var pH = document.getElementById(phSlider).value;
-        var fragLen = document.getElementById(lenSlider).value;
-        fetchData("/"+api+"?ph="+pH.toString()+"&seqs="+testSeqs()+"&fraglen="+fragLen.toString())
-            .then((data) => {
-                chartData = data;
-                chart = chart
-                window[chart].destroy()
-                window[chart] = makeNewChart(chartData, graph, type);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
-            });
-    }
-    
-    Promise.all([fetchData("/api?ph=7&seqs="+testSeqs()+"&fraglen=15"),fetchData("/group?ph=7&seqs="+testSeqs()+"&fraglen=15")])
-            .then((data) => {
-                phData = data[0];
-                groupsData = data[1];
-                window.phchart = makeNewChart(phData, "phGraph", "line");
-                window.groupchart = makeNewChart(groupsData, "groupsChart", "scatter");
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
-            });
-    </script>
+    <script src='static/modules/phChartController.js'></script>
+    <script src='static/modules/ClusterController.js'></script>
 </head>
 
-<body id="page-top">
 
+<body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -100,12 +59,12 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                
+
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-         
+
             </li>
 
             <!-- Divider -->
@@ -113,12 +72,14 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Addons
+
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-            
+                <div class="col-md-12 text-center">
+                    <a class="btn btn-light" href="#" role="button">Upload File</a>
+                </div>
             </li>
 
             <!-- Nav Item - Charts -->
@@ -155,6 +116,7 @@
                                 <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
+
                             </div>
                         </div>
                     </form>
@@ -164,7 +126,7 @@
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
-                            
+
                         </li>
 
                     </ul>
@@ -194,21 +156,12 @@
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Protein Charges</h6>
-                                    
+
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
-                                    <label for="lenSlider" class="form-label">
-                                        Fragment Length
-                                    </label>
-                                    <input type="range" min=1 max=30 class="form-range" id="lenSlider" onchange='changeLen("phSlider","lenSlider","phGraph","phchart","line","api")'/>
-                                    <label for="phSlider" class="form-label">
-                                        pH
-                                    </label>
-                                    <input type="range" min=0 max=14 class="form-range" id="phSlider" onchange='changePH("phSlider","lenSlider","phGraph","phchart","line","api")'/>
-                                    <div class="chart-area">
-                                        <canvas id="phGraph"></canvas>
-                                    </div>
+                                <div id="phContainer" class="card-body">
+                                    <test></test>                                   
+                                    <div class="chart-area"><canvas id="testGraph"></canvas></div>
                                 </div>
                             </div>
                         </div>
@@ -223,19 +176,9 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Protein Clusters</h6>
                                 </div>
                                 <!-- Card Body  (Chart over here)-->
-                                <div class="card-body">
-                                    <label for="lenSlider2" class="form-label">
-                                        Fragment Length
-                                    </label>
-                                    <input type="range" min=1 max=30 class="form-range" id="lenSlider2" onchange='changeLen("phSlider2","lenSlider2","groupsChart","groupchart","scatter","group")'/>
-                                    <label for="phSlider2" class="form-label">
-                                        pH
-                                    </label>
-                                    <input type="range" min=0 max=14 class="form-range" id="phSlider2" onchange='changePH("phSlider2","lenSlider2","groupsChart","groupchart","scatter","group")'/>
-                                    <div class="chart-area">
-                                        <canvas id="groupsChart"></canvas>
-                                    </div>
-                                    
+                                <div id="clusterContainer" class="card-body">
+                                    <clustercontrol></clustercontrol>
+                                    <div class="chart-area"><canvas id="clusterGraph"></canvas></div>
                                 </div>
                             </div>
                         </div>
@@ -257,4 +200,10 @@
 
         </div>
         <!-- End of Content Wrapper -->
- </div>
+   </div>
+<script>
+
+    var clusterGraph = new Vue({
+        el: "#content-wrapper"
+    });
+</script>

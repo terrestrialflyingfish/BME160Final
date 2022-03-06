@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
+import random
 
 
-class dataGen:
+class DataGen:
     def _init_():
-        self.a = ""
+        pass
 
     def padData(self,arr):
         """make sure all lists are same length"""
@@ -106,4 +107,41 @@ class dataGen:
         labels = [str(a + 1) for a in range(len(X_pca[:, 0]))]
         x = X_pca[:, 0]
         y = X_pca[:, 1]
-        return x, y
+        return x, y, X_pca
+    
+    def colors(self, num):
+        '''Returns a list of colors'''
+        colors = []
+        for i in range(num):
+            colors.append("rgb("+",".join([str(n) for n in list(np.random.choice(range(256), size=3))])+")")
+        return colors
+    
+class ml:
+    def _init_():
+        self.a=""
+    
+    def initialize_centroids(self,points, k):
+        '''returns k centroids from the initial points'''
+        row,col = points.shape
+        randPoints = np.random.rand(row,2)
+        centroids = np.array([[2,2],[2,-2],[-2,-2],[-2,2],[0,2]])
+        c = centroids.copy()
+        np.random.shuffle(c)
+        return c[:k]
+    def closest_centroid(self,points, centroids):
+        '''returns an array containing the index to the nearest centroid for each point'''
+        distances = np.sqrt(((points - centroids[:, np.newaxis])**2).sum(axis=2))
+        return np.argmin(distances, axis=0)
+    def move_centroids(self,points, closest, centroids):
+        '''returns the new centroids assigned from the points closest to them'''
+        return np.array([points[closest==k].mean(axis=0) for k in range(centroids.shape[0])])
+    def getClusters(self, points, k):
+        '''returns list with group num'''
+        #do k means
+        centroids = self.initialize_centroids(points, k)
+        groupNums = self.closest_centroid(points, centroids)
+        for i in range(20):
+            groupNums = self.closest_centroid(points, centroids)
+            centroids = self.move_centroids(points, groupNums, centroids) #update centroids
+        return groupNums
+        
