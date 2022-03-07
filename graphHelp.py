@@ -80,12 +80,15 @@ class DataGen:
             "Y": (2.20, 9.11, 0, 5.66),
         }
 
-        t = infoDict[aa]
-        pH = int(pH)
-        coo = -1 / (1 + (10 ** (t[0] - pH)))
-        nh = 1 / (1 + (10 ** (pH - t[1])))
-        sc = 0 if t[2] == 0 else -1 / (1 + (10 ** (t[2] - pH)))if t[2] < 7 else 1 / (1 + (10 ** (pH - t[2])))
-        return coo + nh + sc
+        t = infoDict.get(aa, 0)
+        if t != 0:
+            pH = int(pH)
+            coo = -1 / (1 + (10 ** (t[0] - pH)))
+            nh = 1 / (1 + (10 ** (pH - t[1])))
+            sc = 0 if t[2] == 0 else -1 / (1 + (10 ** (t[2] - pH)))if t[2] < 7 else 1 / (1 + (10 ** (pH - t[2])))
+            return coo + nh + sc
+        else:
+            return 0
 
     def phs(self, seq, pH=7, l=1):
         charges = [self.charge(aa, pH) for aa in seq]
@@ -98,7 +101,6 @@ class DataGen:
 
     def pca(self,data):
         graphData = self.padData(data)
-        print(graphData)
         X = self.stdData(graphData)
         covariance_matrix = np.cov(X.T)
         eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
@@ -123,7 +125,7 @@ class ml:
     def initialize_centroids(self,points, k):
         '''returns k centroids from the initial points'''
         row,col = points.shape
-        randPoints = np.random.rand(row,2)
+        randPoints = np.random.rand(row,2) 
         centroids = np.array([[2,2],[2,-2],[-2,-2],[-2,2],[0,2]])
         c = centroids.copy()
         np.random.shuffle(c)
@@ -145,3 +147,49 @@ class ml:
             centroids = self.move_centroids(points, groupNums, centroids) #update centroids
         return groupNums
         
+class FastAreader :
+    ''' 
+    Define objects to read FastA files.
+    
+    instantiation: 
+    thisReader = FastAreader ('testTiny.fa')
+    usage:
+    for head, seq in thisReader.readFasta():
+        print (head,seq)
+    '''
+    def __init__ (self, fname=''):
+        '''contructor: saves attribute fname '''
+        self.fname = fname
+            
+    def doOpen (self):
+        ''' Handle file opens, allowing STDIN.'''
+        if self.fname == '':
+            return sys.stdin   
+        else:
+            return open(self.fname)
+        
+    def readFasta (self):
+        ''' Read an entire FastA record and return the sequence header/sequence'''
+        header = ''
+        sequence = ''
+        
+        with self.doOpen() as fileH:
+            
+            header = ''
+            sequence = ''
+            
+            # skip to first fasta header
+            line = fileH.readline()
+            while not line.startswith('>') :
+                line = fileH.readline()
+            header = line[1:].rstrip()
+
+            for line in fileH:
+                if line.startswith ('>'):
+                    yield header,sequence
+                    header = line[1:].rstrip()
+                    sequence = ''
+                else :
+                    sequence += ''.join(line.rstrip().split()).upper()
+
+        yield header,sequence
