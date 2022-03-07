@@ -8,6 +8,7 @@ import shutil
 import random
 import os
 import numpy as np
+
 class CustomFlask(Flask):
     jinja_options = Flask.jinja_options.copy()
     jinja_options.update(dict(
@@ -19,28 +20,39 @@ class CustomFlask(Flask):
     comment_end_string='#)',
   ))
 app = CustomFlask(__name__) #avoid JavaScript interference
+
+
 datagen = DataGen()
 mL = ml()
+
+#this dictionary holds the current FASTA file species and sequences
+#below is default values
 currentData = {
     "species":  ["Alkalihalobacillus pseudofirmus","Alkalibacter_saccharofermentans","Halorhodospira halochloris","Helicobacter pylori","Escherichia coli","Vibrio alginolyticus","Acidiphilium cryptum","Acidithiobacillus ferrooxidans","Sulfobacillus acidophilus"],
     "seqs": ["MSIKPEEISSLIKQQIESFQSDVQVQDVGTVIR", "VAAADVGTVPEMSIKLIKQQIESFQSDEISSIR", "YLHSRLLERAAKMSDEFGAGSLTALPVIE","PIGRGQRELIIGDRQIGKTALAIDAIINQKDSGIFSIYVA", "ALAIDAIAVVADVGKTVMEFGAGPEM", "MSLIKQALAIDSAKPEMISAIINQKDSGIFS", "IGDRQIGKTALAIDAIINQKDSGIMPP", "KDSGIFIYVASIYVAKDSGIFSVVADVGK", "VASIYVAIGRGQRELIIKQQIESFQSDES"]
 }
+
 # Creating the upload folder
 upload_folder = "uploads/"
-if os.listdir(upload_folder): #check if folder empty
+if os.listdir(upload_folder): #clear uploads folder on when app restarts
     shutil.rmtree(upload_folder)
-if not os.path.exists(upload_folder):
+if not os.path.exists(upload_folder): #make uploads folder if it doesn't exist yet
     os.mkdir(upload_folder)
 
 @app.route("/", methods = ['GET', 'POST'])
-def chart():
+#returns homepage and handles uploads
+def upload():
     if request.method == 'POST': # check if the method is post
-        print(request.data)
-        f = request.files["file"] # get the file from the files object
+ 
+        #get uploaded Fasta file
+        f = request.files["file-upload"] # get the file from the files object
         fname = os.path.join("uploads/",secure_filename(f.filename))
-        f.save(fname) # this will secure the file
+        f.save(fname) 
+        
+        #read uploaded FastA file
         reader = FastAreader(fname)
         
+        #change currentData based on contents of uploaded Fasta file
         speciesList = []
         seqList = []
         for head, seq in reader.readFasta():
@@ -50,79 +62,78 @@ def chart():
         currentData["seqs"] = seqList
         
         formObj = {"message": 'file uploaded successfully'}
-        return render_template('home.html', form=formObj)# Display this message after uploading
+        return render_template('home.html', form=formObj)# reload page
     else:
+        #render page 
         formObj = {"message": "upload file"}
         return render_template('home.html', form=formObj)
 
 @app.route("/api")
-def single_pH():
+def getpHGraphs():
     chartData = {}
     if (request.method == "GET"):
         seqList = currentData["seqs"]
-        ph = request.args.get("ph")
+        ph = request.args.get("ph") #pH to calculate charge values for
         fragLen = request.args.get("fraglen")
-        values = [datagen.phs(seqList[i],pH=ph,l=fragLen) for i in range(len(seqList))]
-        valueLens = [len(v) for v in values]
-        labels = [b*int(fragLen) for b in range(max(valueLens))]
+        
+        #generate graph data
+        datasets = [datagen.phs(seqList[i],pH=ph,l=fragLen) for i in range(len(seqList))] #get charges of protein 
+        
+        # x values for line graph
+        datasetLens = [len(dataset) for dataset in datasets]
+        labels = [b*int(fragLen) for b in range(max(datasetLens))] #scale x-axis to the longest sequence in the dataset
+        
         title = "Charges at pH {}".format(str(ph))
         species = currentData["species"]
-        colors = datagen.colors(len(species))
-        chartData = {"title": title, "labels": labels, "val": values, "species": species, "colors": colors}
+        colors = datagen.colors(len(species)) #generate colors for each line on the graph
+        chartData = {"title": title, "labels": labels, "val": datasets, "species": species, "colors": colors}
     else:
-        chartData = {"title": "oh no something iss wrong", "labels": ["err"], "val": [404]}
+        chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
     return jsonify(chartData)
  
 @app.route("/group")
 def groupProt():
     chartData = {}
     if (request.method == "GET"):
-        seqList = currentData["seqs"]
+        seqList = currentData["seqs"] #get current sequences
         ph = request.args.get("ph")
-        fragLen = request.args.get("fraglen")
-        clusterNum = request.args.get("num")
-        labels = currentData["species"]
-        '''
-        for zz in range(100):
-            tesList = list(seqList[int(np.floor(zz/5))])
-            tesList[zz+zz:zz+zz+16] = list(seqList[int(np.floor(zz/4))])[zz+zz:zz+zz+16]
-            asdf = list(seqList[int(np.floor(zz/6))])[zz+zz+38:zz+zz+60]
-            random.shuffle(asdf)
-            tesList[zz+zz+38:zz+zz+60] = asdf
-            tesList[zz+zz+100:zz+zz+134] = list(seqList[int(np.floor(zz/3.5))])[zz+zz+100:zz+zz+134]
-            tesList[zz+zz+200:zz+zz+234] = list(seqList[int(np.floor(zz+2/5.5))])[zz+zz+200:zz+zz+234]
-            seqList.append(''.join(tesList))
-            labels.append("test"+str(zz))
-        '''
+        fragLen = request.args.get("fraglen") 
+        clusterNum = request.args.get("num")#this is a string, for some reason I can't put int around this here because it returns an error
+        species = currentData["species"]
+   
+        #get pH vectors 
         allPhs = [datagen.phs(sq,pH=ph,l=fragLen) for sq in seqList]
         
+        #turn vectors into points with coordinates based on how similar they are to each other
         x,y,points = datagen.pca(allPhs)
         x = [xx for xx in x]
         y = [yy for yy in y]
-        groupLabels = []
+        groupsSpecies = []
         clusters = mL.getClusters(points, int(clusterNum))
-        datapoints = []
+        datasets = []
+        
+        #create separate dataset for each group
         for it in range(int(clusterNum)):
-            curPoints = [{"x": float(x[i]), "y": float(y[i])} for i in range(len(x)) if clusters[i] == int(it)]
-            thisLabels = [labels[i] for i in range(len(x)) if clusters[i] == int(it)]
-            datapoints.append(curPoints)
-            groupLabels.append(thisLabels)
+            #have to convert to float because of some numpy shenanigans
+            dataset = [{"x": float(x[i]), "y": float(y[i])} for i in range(len(x)) if clusters[i] == it]
+            
+            #get the species that fall into this group or cluster
+            datasets.append(dataset)
+            
+            #get the names of each species in this group
+            thisGroupSpecies = [species[i] for i in range(len(x)) if clusters[i] == it]
+            groupsSpecies.append(thisGroupSpecies)
+            
+        #title for graph
         title = "Protein Clusters at pH {}".format(str(ph))
-        colors = datagen.colors(int(clusterNum))
-        groups = ["Group"+str(i+1) for i in range(int(clusterNum))]
-        chartData = {"title": title, "labels": groupLabels, "val": datapoints, "groups": groups, "colors": colors}
+        
+        colors = datagen.colors(int(clusterNum)) #generate colors for each clustter on the graph
+        groups = ["Group"+str(i+1) for i in range(int(clusterNum))] #create group names
+        chartData = {"title": title, "labels": groupsSpecies, "val": datasets, "groups": groups, "colors": colors}
     else:
-        chartData = {"title": "oh no something iss wrong", "labels": ["err"], "val": [404]}
-    return jsonify(chartData)    
-   
-@app.route('/upload', methods = ['GET', 'POST'])
-def uploadfile():
-    if request.method == 'POST': # check if the method is post
-        print(request.data)
-        f = request.files["file"] # get the file from the files object
-        f.save(os.path.join("uploads/",secure_filename(f.filename))) # this will secure the file
-        message = {"message": 'file uploaded successfully'}
-        return jsonify(message)# Display this message after uploading
-    
+        #if some error happens
+        chartData = {"title": "oh no something is wrong", "labels": ["err"], "val": [404]}
+    return jsonify(chartData) #send to webpage   
+
 if __name__ == "__main__":
     app.run(debug=True)

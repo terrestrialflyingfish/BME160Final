@@ -24,6 +24,10 @@
     <script src='static/chart.min.js'></script>
     <script src='static/modules/phChartController.js'></script>
     <script src='static/modules/ClusterController.js'></script>
+    
+    <style>
+        
+    </style>
 </head>
 
 
@@ -78,8 +82,11 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <form ref="form" method="POST" name="form" enctype="multipart/form-data"> <!-- return false prevents redirection-->
-                    <input type="file" ref="fileinput" name="file" v-on:change="form.submit()" /> 
-                    (<< form.message >>)
+                    <label for="file-upload" class="custom-file-upload">
+                        Custom Upload
+                    </label>
+                    <input type="file" ref="fileinput" name="file-upload" v-on:change="form.submit()" /> 
+                   
                     <!--<div class="col-md-12 text-center">
                         <a class="btn btn-light" href="#" role="button">Upload File</a>
                     </div>-->
@@ -154,7 +161,7 @@
                     <div class="row">
 
                         <!-- Area Chart -->
-                        <div class="col-xl-12 col-lg-12">
+                        <div class="col-xl-6 col-lg-12 mx-auto">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
@@ -169,12 +176,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <!-- Pie Chart -->
-                        <div class="col-xl-12 col-lg-12">
+                        
+                        <div class="col-xl-6 col-lg-12 mx-auto">
                             <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Protein Clusters</h6>
@@ -187,6 +191,23 @@
                             </div>
                         </div>
                     </div>
+                    <!--
+                    <div class="row">
+                      
+                        <div class="col-xl-9 col-lg-12 mx-auto">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Protein Clusters</h6>
+                                </div>
+                           
+                                <div id="clusterContainer" class="card-body">
+                                    <clustercontrol></clustercontrol>
+                                    <div class="chart-area"><canvas id="clusterGraph"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
 
 
             </div>

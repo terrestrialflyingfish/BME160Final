@@ -114,8 +114,16 @@ class DataGen:
     def colors(self, num):
         '''Returns a list of colors'''
         colors = []
+        npGen = np.random.default_rng()
+        hue = 0 #set base hue
+        hueStep = int(360/num)
         for i in range(num):
-            colors.append("rgb("+",".join([str(n) for n in list(np.random.choice(range(256), size=3))])+")")
+            sat = npGen.integers(50, high=101)
+            light = npGen.integers(30, high=56)
+            colorStr = "hsl({:1n},{:1n}%,{:1n}%)".format(hue,sat,light)
+            colors.append(colorStr)
+            hue+=hueStep #make sure colors are distinct
+            #colors.append("hsl("+",".join([str(n) for n in list(np.random.choice(range(256), size=3))])+")")
         return colors
     
 class ml:
