@@ -1,9 +1,9 @@
 Vue.component('clustercontrol', {
+    props: ["thisid"],
     data: function() {
         return {
             ph: 7,
             frag: 15,
-            thisId: "testGraph",
             chartInstance: "",
             clusterNum: 2
         }
@@ -36,7 +36,7 @@ Vue.component('clustercontrol', {
             return dataParams
         },
         newChart(dataParams, title){
-            const ctx = document.getElementById("clusterGraph").getContext("2d");
+            const ctx = document.getElementById(this.thisid).getContext("2d");
             let options = {
                 maintainAspectRatio: false,
                 plugins: {
@@ -52,7 +52,7 @@ Vue.component('clustercontrol', {
                             label: function(ctx) {
                                 // console.log(ctx);
                                 let label = ctx.dataset.labels[ctx.dataIndex];
-                                label += " (" + ctx.parsed.x + ", " + ctx.parsed.y + ")";
+                                label += " (" + ctx.parsed.x.toFixed(2) + ", " + ctx.parsed.y.toFixed(2) + ")";
                                 return label;
                             }
                         }
@@ -93,12 +93,11 @@ Vue.component('clustercontrol', {
     },
     mounted(){
         this.$nextTick(() => {
-            self = this;
-            self.fetchData()
+            this.fetchData()
             .then((data) => {
                 apiRes = data;
-                var dataParams = self.getDataObj(apiRes);
-                self.newChart(dataParams, apiRes.title);
+                var dataParams = this.getDataObj(apiRes);
+                this.newChart(dataParams, apiRes.title);
             });
         });
     },

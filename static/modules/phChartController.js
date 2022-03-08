@@ -1,15 +1,16 @@
 Vue.component('test', {
+    props: ["thisid"],
     data: function() {
         return {
-            phh: 7,
-            fragg: 15,
-            chartInstancee: ""
+            ph: 7,
+            frag: 15,
+            chartInstance: ""
         }
     },
     methods: {
-        fetchDataa(){
+        fetchData(){
             return new Promise((resolve, reject) => {
-                urlStr = "/api?ph="+this.phh.toString()+"&fraglen="+this.fragg.toString()
+                urlStr = "/api?ph="+this.ph.toString()+"&fraglen="+this.frag.toString()
                 fetch(urlStr)
                     .then((res) => {
                         resolve(res.json())
@@ -17,13 +18,14 @@ Vue.component('test', {
             });
 
         },
-        getDataObjj(apiRes){
+        getDataObj(apiRes){
             dataList = []
             for (let i = 0; i < apiRes.species.length; i++) {
                 var dataObj = {
                     label: apiRes.species[i],
                     data: apiRes.val[i],
                     fill: false,
+                    yAxisID: "y",
                     borderColor: apiRes.colors[i],
                     tension: 0
                 };
@@ -35,22 +37,44 @@ Vue.component('test', {
             };
             return dataParams
         },
-        newChartt(dataParams, title){
-            const ctx = document.getElementById("testGraph").getContext("2d");
+        newChart(dataParams, title){
+            const ctx = document.getElementById(this.thisid).getContext("2d");
             var options = {
                 maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            align: "center",
+                            text: "Amino Acid Position"
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            align: "center",
+                            text: "Charge"
+                        }
+                    }
+                },
                 plugins: {
                     title: {
                         display: true,
                         text: title
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true
                     },
-                    y: {
-                        beginAtZero: false
+                    tooltip: {
+                        callbacks: {
+                            title: function(ctx) {
+                                console.log(ctx[0]);
+                                //let title = ctx.dataset.label;
+                               return ctx[0].dataset.label;
+                            },
+                            label: function(ctx) {
+                                let label = "Amino Acid";
+                                label += " (" + ctx.label + ")";
+                                return label;
+                            }
+                        }
                     }
                 }
             }
@@ -59,40 +83,36 @@ Vue.component('test', {
                 data: dataParams,
                 options: options
             });
-            this.chartInstancee = chart;
+            this.chartInstance = chart;
         },
-        refreshChartt(){
-            selff = this;
-            this.fetchDataa()
+        refreshChart(){
+            this.fetchData()
             .then((data) => {
                 apiRes = data;
-                var dataParams = selff.getDataObjj(apiRes);
-                selff.chartInstancee.destroy();
-                selff.newChartt(dataParams, apiRes.title);
+                var dataParams = this.getDataObj(apiRes);
+                this.chartInstance.destroy();
+                this.newChart(dataParams, apiRes.title);
             });
         }
     },
     watch:{
-        phh(newPH){
-            this.phh = newPH;
-            this.refreshChartt();
+        ph(newPH){
+            this.refreshChart();
         },
-        fragg(newLen){
-            this.fragg = newLen;
-            this.refreshChartt();
+        frag(newLen){
+            this.refreshChart();
         }
     },
-    mounted(){
+    mounted: function(){
         this.$nextTick(() => {
-            selff = this;
-            selff.fetchDataa()
+            this.fetchData()
             .then((data) => {
                 apiRes = data;
-                var dataParams = selff.getDataObjj(apiRes);
-                selff.newChartt(dataParams, apiRes.title);
+                var dataParams = this.getDataObj(apiRes);
+                this.newChart(dataParams, apiRes.title);
             });
         });
     },
-    template: '<div><label for="a" class="form-label">Fragment Length</label><input id="a" type="range" min=1 max=30 class="form-range" v-model="fragg" /><label for="b" class="form-label">pH</label><input id="b" type="range" min=0 max=14 class="form-range" v-model="phh" /></div>'
+    template: '<div><label class="form-label">Fragment Length</label><input type="range" min=1 max=30 class="form-range" v-model="frag" /><label class="form-label">pH</label><input type="range" min=0 max=14 class="form-range" v-model="ph" /></div>'
 });
         

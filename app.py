@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify, request
 from datetime import time
 from werkzeug.utils import secure_filename
 from graphHelp import DataGen, FastAreader
-from graphHelp import ml
+from graphHelp import MachineLearning
 import shutil
 import random
 import os
@@ -23,7 +23,7 @@ app = CustomFlask(__name__) #avoid JavaScript interference
 
 
 datagen = DataGen()
-mL = ml()
+ml = MachineLearning()
 
 #this dictionary holds the current FASTA file species and sequences
 #below is default values
@@ -81,7 +81,7 @@ def getpHGraphs():
         
         # x values for line graph
         datasetLens = [len(dataset) for dataset in datasets]
-        labels = [b*int(fragLen) for b in range(max(datasetLens))] #scale x-axis to the longest sequence in the dataset
+        labels = [b*int(fragLen)+1 for b in range(max(datasetLens))] #scale x-axis to the longest sequence in the dataset
         
         title = "Charges at pH {}".format(str(ph))
         species = currentData["species"]
@@ -105,11 +105,11 @@ def groupProt():
         allPhs = [datagen.phs(sq,pH=ph,l=fragLen) for sq in seqList]
         
         #turn vectors into points with coordinates based on how similar they are to each other
-        x,y,points = datagen.pca(allPhs)
+        x,y,points = ml.pca(allPhs)
         x = [xx for xx in x]
         y = [yy for yy in y]
         groupsSpecies = []
-        clusters = mL.getClusters(points, int(clusterNum))
+        clusters = ml.getClusters(points, int(clusterNum))
         datasets = []
         
         #create separate dataset for each group

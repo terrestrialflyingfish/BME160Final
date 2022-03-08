@@ -26,7 +26,51 @@
     <script src='static/modules/ClusterController.js'></script>
     
     <style>
-        
+        input[type=file] {
+          display: block;
+          width: 100%;
+          padding: 0.375rem 0.75rem;
+          font-size: 1rem;
+          font-weight: 400;
+          line-height: 1.5;
+          color: #212529;
+          background-color: #fff;
+          background-clip: padding-box;
+          border: 1px solid #ced4da;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          border-radius: 0.25rem;
+          transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        input[type=file] {
+          overflow: hidden;
+        }
+        input[type=file]:not(:disabled):not([readonly]) {
+          cursor: pointer;
+        }
+        input[type=file]:focus {
+          color: #212529;
+          background-color: #fff;
+          border-color: #86b7fe;
+          outline: 0;
+          box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        input[type=file]::file-selector-button {
+          padding: 0.375rem 0.75rem;
+          margin: -0.375rem -0.75rem;
+          -webkit-margin-end: 0.75rem;
+          margin-inline-end: 0.75rem;
+          color: #212529;
+          background-color: #e9ecef;
+          pointer-events: none;
+          border-color: inherit;
+          border-style: solid;
+          border-width: 0;
+          border-inline-end-width: 1px;
+          border-radius: 0;
+          transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
     </style>
 </head>
 
@@ -80,8 +124,8 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <form ref="form" method="POST" name="form" enctype="multipart/form-data"> <!-- return false prevents redirection-->
+            <li class="nav-item row">
+                <form ref="form" class="col-xl-10 col-lg-12 mx-auto" method="POST" name="form" enctype="multipart/form-data"> <!-- return false prevents redirection-->
                     <label for="file-upload" class="custom-file-upload">
                         Custom Upload
                     </label>
@@ -171,8 +215,8 @@
                                 </div>
                                 <!-- Card Body -->
                                 <div id="phContainer" class="card-body">
-                                    <test></test>                                   
-                                    <div class="chart-area"><canvas id="testGraph"></canvas></div>
+                                    <test thisid="phLineGraph"></test>                                   
+                                    <div class="chart-area"><canvas id="phLineGraph"></canvas></div>
                                 </div>
                             </div>
                         </div>
@@ -185,30 +229,30 @@
                                 </div>
                                 <!-- Card Body  (Chart over here)-->
                                 <div id="clusterContainer" class="card-body">
-                                    <clustercontrol></clustercontrol>
+                                    <clustercontrol thisid="clusterGraph"></clustercontrol>
                                     <div class="chart-area"><canvas id="clusterGraph"></canvas></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!--
+<!--
                     <div class="row">
                       
-                        <div class="col-xl-9 col-lg-12 mx-auto">
+                        <div class="col-xl-6 col-lg-12 mx-auto">
                             <div class="card shadow mb-4">
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Protein Clusters</h6>
                                 </div>
-                           
+ 
                                 <div id="clusterContainer" class="card-body">
                                     <clustercontrol></clustercontrol>
                                     <div class="chart-area"><canvas id="clusterGraph"></canvas></div>
                                 </div>
                             </div>
                         </div>
-                    </div>-->
-
+                    </div>
+-->
 
             </div>
             <!-- End of Main Content -->

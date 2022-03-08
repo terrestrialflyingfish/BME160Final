@@ -7,22 +7,6 @@ class DataGen:
     def _init_():
         pass
 
-    def padData(self,arr):
-        """make sure all lists are same length"""
-        lens = [len(kj) for kj in arr]
-        maxLength = max(lens)
-        minLength = min(lens)
-   
-        return [v + [0] * (maxLength - len(v)) for v in arr]
-
-    def stdData(self,arr):
-        z = np.array(arr)
-        mn = np.mean(z, axis=0)
-        st = np.std(z, axis=0)
-        zz = (z - mn) / st
-        np.nan_to_num(zz, copy=False)
-        return zz
-
     def hydro(self,seq, l=11):
         hydroDict = {
             "A": 1.8,
@@ -98,18 +82,6 @@ class DataGen:
             frag = charges[x : x + l]
             k.append((sum(frag) / len(frag)))
         return k
-
-    def pca(self,data):
-        graphData = self.padData(data)
-        X = self.stdData(graphData)
-        covariance_matrix = np.cov(X.T)
-        eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
-        projection_matrix = (eigen_vectors.T[:][:2]).T
-        X_pca = X.dot(projection_matrix)
-        labels = [str(a + 1) for a in range(len(X_pca[:, 0]))]
-        x = X_pca[:, 0]
-        y = X_pca[:, 1]
-        return x, y, X_pca
     
     def colors(self, num):
         '''Returns a list of colors'''
@@ -123,12 +95,40 @@ class DataGen:
             colorStr = "hsl({:1n},{:1n}%,{:1n}%)".format(hue,sat,light)
             colors.append(colorStr)
             hue+=hueStep #make sure colors are distinct
-            #colors.append("hsl("+",".join([str(n) for n in list(np.random.choice(range(256), size=3))])+")")
         return colors
     
-class ml:
+class MachineLearning:
+    '''numpy versions of some common machine learning algorithms because I can't get the proper python modules for them to install on my laptop'''
     def _init_():
-        self.a=""
+        pass
+        
+    def padData(self,arr):
+        """make sure all lists are same length"""
+        lens = [len(kj) for kj in arr]
+        maxLength = max(lens)
+        minLength = min(lens)
+   
+        return [v + [0] * (maxLength - len(v)) for v in arr]
+
+    def stdData(self,arr):
+        z = np.array(arr)
+        mn = np.mean(z, axis=0)
+        st = np.std(z, axis=0)
+        zz = (z - mn) / st
+        np.nan_to_num(zz, copy=False)
+        return zz
+    
+    def pca(self,data):
+        graphData = self.padData(data)
+        X = self.stdData(graphData)
+        covariance_matrix = np.cov(X.T)
+        eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
+        projection_matrix = (eigen_vectors.T[:][:2]).T
+        X_pca = X.dot(projection_matrix)
+        labels = [str(a + 1) for a in range(len(X_pca[:, 0]))]
+        x = X_pca[:, 0]
+        y = X_pca[:, 1]
+        return x, y, X_pca
     
     def initialize_centroids(self,points, k):
         '''returns k centroids from the initial points'''
@@ -150,7 +150,7 @@ class ml:
         #do k means
         centroids = self.initialize_centroids(points, k)
         groupNums = self.closest_centroid(points, centroids)
-        for i in range(20):
+        for i in range(30):
             groupNums = self.closest_centroid(points, centroids)
             centroids = self.move_centroids(points, groupNums, centroids) #update centroids
         return groupNums
