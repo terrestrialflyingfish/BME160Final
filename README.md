@@ -1,6 +1,12 @@
 # BME160Final
 Code for final project
 
+## Main packages used
+
+- Python: Flask (make server for app), numpy: (to do math)
+- Javascript: Vue (make web app do fancy things)
+- CSS: Bootstrap (make web app look fancy)
+
 ## How to run
 
 1. Clone the repository
