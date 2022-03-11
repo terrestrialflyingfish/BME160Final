@@ -82,7 +82,7 @@ class DataGen:
             frag = charges[x : x + l]
             k.append((sum(frag) / len(frag)))
         return k
-    
+
     def colors(self, num):
         '''Returns a list of colors'''
         colors = []
@@ -96,18 +96,25 @@ class DataGen:
             colors.append(colorStr)
             hue+=hueStep #make sure colors are distinct
         return colors
-    
+
+    def randomSeq(self, length, i=0):
+        aa = [['A', 'G', 'M', 'S', 'C'], ['H', 'N', 'T', 'D', 'I'], ['P', 'V', 'E', 'K', 'Q'], ['W', 'F', 'L', 'R', 'Y']]
+        return ''.join(np.random.choice(aa[i], size=length))
+
+    def randomDataset(self, num):
+        return [self.randomSeq(300, i % 4) for i in range(num)], ["test"+str(i) for i in range(num)]
+
 class MachineLearning:
     '''numpy versions of some common machine learning algorithms because I can't get the proper python modules for them to install on my laptop'''
     def _init_():
         pass
-        
+
     def padData(self,arr):
         """make sure all lists are same length"""
         lens = [len(kj) for kj in arr]
         maxLength = max(lens)
         minLength = min(lens)
-   
+
         return [v + [0] * (maxLength - len(v)) for v in arr]
 
     def stdData(self,arr):
@@ -117,7 +124,7 @@ class MachineLearning:
         zz = (z - mn) / st
         np.nan_to_num(zz, copy=False)
         return zz
-    
+
     def pca(self,data):
         graphData = self.padData(data)
         X = self.stdData(graphData)
@@ -129,37 +136,54 @@ class MachineLearning:
         x = X_pca[:, 0]
         y = X_pca[:, 1]
         return x, y, X_pca
-    
+    def regularPoly(self, n,a,b,r):
+        points = [[a,b+r]]
+        theta = np.pi/2
+        dTheta = 2*np.pi/n
+
+        for i in range(1,n):
+            theta += dTheta
+            points.append([a + r*np.cos(theta), b + r*np.sin(theta)])
+
+        return np.array(points)
     def initialize_centroids(self,points, k):
         '''returns k centroids from the initial points'''
         row,col = points.shape
-        randPoints = np.random.rand(row,2) 
-        centroids = np.array([[2,2],[2,-2],[-2,-2],[-2,2],[0,2]])
-        c = centroids.copy()
-        np.random.shuffle(c)
-        return c[:k]
+        avgPoint = np.average(points, axis=0)
+        print(avgPoint)
+        #randPoints = np.random.rand(row,2)
+        #centroids = np.array([[2,2],[2,-2],[-2,-2],[-2,2],[0,2]])
+        c = self.regularPoly(k,avgPoint[0],avgPoint[1],10)
+        return c
     def closest_centroid(self,points, centroids):
         '''returns an array containing the index to the nearest centroid for each point'''
         distances = np.sqrt(((points - centroids[:, np.newaxis])**2).sum(axis=2))
         return np.argmin(distances, axis=0)
     def move_centroids(self,points, closest, centroids):
         '''returns the new centroids assigned from the points closest to them'''
-        return np.array([points[closest==k].mean(axis=0) for k in range(centroids.shape[0])])
+        c = np.array([points[closest==k].mean(axis=0) for k in range(centroids.shape[0])])
+        return np.nan_to_num(c)
     def getClusters(self, points, k):
         '''returns list with group num'''
         #do k means
-        centroids = self.initialize_centroids(points, k)
-        groupNums = self.closest_centroid(points, centroids)
-        for i in range(30):
-            groupNums = self.closest_centroid(points, centroids)
-            centroids = self.move_centroids(points, groupNums, centroids) #update centroids
-        return groupNums
-        
+        prevCentroids = np.array([[-9999,-9999] for i in range(k)])
+        curCentroids = self.initialize_centroids(points, k)
+        distances = np.linalg.norm(curCentroids-prevCentroids, axis=1)
+        groupNums = self.closest_centroid(points, curCentroids)
+        curIter = 0
+        while max(distances) > 0.1 and curIter < 1000:
+            prevCentroids = curCentroids
+            curCentroids = self.move_centroids(points, groupNums, prevCentroids) #update centroids
+            distances = np.linalg.norm(curCentroids-prevCentroids, axis=1)
+            groupNums = self.closest_centroid(points, curCentroids)
+            curIter += 1
+        return groupNums, curCentroids
+
 class FastAreader :
-    ''' 
+    '''
     Define objects to read FastA files.
-    
-    instantiation: 
+
+    instantiation:
     thisReader = FastAreader ('testTiny.fa')
     usage:
     for head, seq in thisReader.readFasta():
@@ -168,24 +192,24 @@ class FastAreader :
     def __init__ (self, fname=''):
         '''contructor: saves attribute fname '''
         self.fname = fname
-            
+
     def doOpen (self):
         ''' Handle file opens, allowing STDIN.'''
         if self.fname == '':
-            return sys.stdin   
+            return sys.stdin
         else:
             return open(self.fname)
-        
+
     def readFasta (self):
         ''' Read an entire FastA record and return the sequence header/sequence'''
         header = ''
         sequence = ''
-        
+
         with self.doOpen() as fileH:
-            
+
             header = ''
             sequence = ''
-            
+
             # skip to first fasta header
             line = fileH.readline()
             while not line.startswith('>') :

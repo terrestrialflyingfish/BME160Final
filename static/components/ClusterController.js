@@ -1,17 +1,39 @@
-Vue.component('clustercontrol', {
-    props: ["thisid"],
+Vue.component('scatter', {
+    props: ["graphid", "api", "params", "info"],
     data: function() {
         return {
-            ph: 7,
-            frag: 15,
             chartInstance: "",
-            clusterNum: 2
+            valDict: {},
+            components: [{"name": "vue-range", "url": "/static/modules/vue-range.js"}]
         }
     },
+    computed: {
+      apiUrl(){
+         base = "/"+this.api+"?&info="+this.info
+         this.params.forEach((item,index)=>{
+             paramStr = "&"+item.name+"="+this.valDict[item.name]
+             base += paramStr
+         })
+         return base
+      }
+    },
     methods: {
+       initValDict(){
+           vdict ={}
+           this.params.forEach((item,index)=>{
+               vdict[item.name] = item.default
+           })
+           this.valDict = vdict
+           return vdict
+       },
+        vhandler(e, name){
+           this.valDict[name] = e;
+           this.refreshChart();
+        },
         fetchData(){
             return new Promise((resolve, reject) => {
-                urlStr = "/group?ph="+this.ph.toString()+"&num="+this.clusterNum+"&fraglen="+this.frag.toString()
+                console.log(this.apiUrl)
+                urlStr = this.apiUrl
                 fetch(urlStr)
                     .then((res) => {
                         resolve(res.json())
@@ -36,7 +58,7 @@ Vue.component('clustercontrol', {
             return dataParams
         },
         newChart(dataParams, title){
-            const ctx = document.getElementById(this.thisid).getContext("2d");
+            const ctx = document.getElementById(this.graphid).getContext("2d");
             let options = {
                 maintainAspectRatio: false,
                 plugins: {
@@ -75,21 +97,13 @@ Vue.component('clustercontrol', {
                 self.chartInstance.destroy();
                 self.newChart(dataParams, apiRes.title);
             });
+        },
+        getVal(varName){
+            return this[varName]
         }
     },
-    watch:{
-        ph(newPH){
-            this.ph = newPH;
-            this.refreshChart();
-        },
-        frag(newLen){
-            this.frag = newLen;
-            this.refreshChart();
-        },
-        clusterNum(newNum){
-            this.clusterNum = newNum;
-            this.refreshChart();
-        }
+    created(){
+      this.initValDict();
     },
     mounted(){
         this.$nextTick(() => {
@@ -101,7 +115,11 @@ Vue.component('clustercontrol', {
             });
         });
     },
-    template: '<div><label class="form-label">Fragment Length: {{frag}}</label><input type="range" min=1 max=30 class="form-range" v-model="frag" /><label class="form-label">pH: {{ph}}</label><input type="range" min=0 max=14 class="form-range" v-model="ph" /><label class="form-label">Cluster Number: {{clusterNum}}</label><input type="range" min=1 max=5 class="form-range" v-model="clusterNum" /></div>'
+    template: `
+              <div>
+                  <template v-for='paramObj in params'>
+                      <vue-range :val='valDict[paramObj.name]' v-on:vchange='vhandler($event, paramObj.name)' :min=paramObj.pmin :max=paramObj.pmax :label=paramObj.label></vue-range>
+                  </template>
+              </div>
+              `
 });
-        
-
