@@ -26,10 +26,6 @@
     <script src='static/components/vue-range.js'></script>
     <script src='static/components/phChartController.js'></script>
     <script src='static/components/ClusterController.js'></script>
-
-    <style>
-
-    </style>
 </head>
 
 
@@ -72,8 +68,8 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item row">
                 <form ref="form" class="col-xl-10 col-lg-12 mx-auto" method="POST" name="form" enctype="multipart/form-data"> <!-- return false prevents redirection-->
-                    <label for="file-upload">
-                        Custom Upload
+                    <label for="file-upload" style="color: rgb(220,220,220)">
+                        Upload FastA:
                     </label>
                     <input type="file" ref="fileinput" name="file-upload" v-on:change="form.submit()" />
 

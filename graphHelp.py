@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import random
 
 
 class DataGen:
@@ -8,6 +7,7 @@ class DataGen:
         pass
 
     def hydro(self,seq, l=11):
+        '''return hydrophobicity/hydrophilicity list'''
         hydroDict = {
             "A": 1.8,
             "G": -0.4,
@@ -41,6 +41,7 @@ class DataGen:
 
     def charge(self,aa, pH=7):
         # info from http://chem.ucalgary.ca/courses/351/Carey5th/Ch27/ch27-1-4-2.html
+        #the following is pKa values for carboxyl, amine, sidechain, and finally pI
         infoDict = {
             "A": (2.34, 9.69, 0, 6.00),
             "G": (2.34, 9.60, 0, 5.97),
@@ -75,6 +76,7 @@ class DataGen:
             return 0
 
     def phs(self, seq, pH=7, l=1):
+        '''return list of charges at a pH'''
         charges = [self.charge(aa, pH) for aa in seq]
         k = []
         l = int(l)
@@ -84,7 +86,7 @@ class DataGen:
         return k
 
     def colors(self, num):
-        '''Returns a list of colors'''
+        '''Returns a list of colors for the graphs'''
         colors = []
         npGen = np.random.default_rng()
         hue = 0 #set base hue
@@ -98,10 +100,12 @@ class DataGen:
         return colors
 
     def randomSeq(self, length, i=0):
+        '''generate random default sequence'''
         aa = [['A', 'G', 'M', 'S', 'C'], ['H', 'N', 'T', 'D', 'I'], ['P', 'V', 'E', 'K', 'Q'], ['W', 'F', 'L', 'R', 'Y']]
         return ''.join(np.random.choice(aa[i], size=length))
 
     def randomDataset(self, num):
+        '''generate random sequences and labels'''
         return [self.randomSeq(300, i % 4) for i in range(num)], ["test"+str(i) for i in range(num)]
 
 class MachineLearning:
@@ -118,12 +122,13 @@ class MachineLearning:
         return [v + [0] * (maxLength - len(v)) for v in arr]
 
     def stdData(self,arr):
-        z = np.array(arr)
-        mn = np.mean(z, axis=0)
-        st = np.std(z, axis=0)
-        zz = (z - mn) / st
-        np.nan_to_num(zz, copy=False)
-        return zz
+        '''standardize data for pca'''
+        npMatrix = np.array(arr)
+        mn = np.mean(npMatrix, axis=0)
+        st = np.std(npMatrix, axis=0)
+        stdNpMatrix = (npMatrix - mn) / st
+        np.nan_to_num(stdNpMatrix, copy=False) #in case division by zero happened
+        return stdNpMatrix
 
     def pca(self,data):
         graphData = self.padData(data)
@@ -137,6 +142,7 @@ class MachineLearning:
         y = X_pca[:, 1]
         return x, y, X_pca
     def regularPoly(self, n,a,b,r):
+        '''returns coordinates of regular polygon vertices'''
         points = [[a,b+r]]
         theta = np.pi/2
         dTheta = 2*np.pi/n
@@ -146,6 +152,7 @@ class MachineLearning:
             points.append([a + r*np.cos(theta), b + r*np.sin(theta)])
 
         return np.array(points)
+
     def initialize_centroids(self,points, k):
         '''returns k centroids from the initial points'''
         row,col = points.shape
@@ -153,16 +160,19 @@ class MachineLearning:
         print(avgPoint)
         #randPoints = np.random.rand(row,2)
         #centroids = np.array([[2,2],[2,-2],[-2,-2],[-2,2],[0,2]])
-        c = self.regularPoly(k,avgPoint[0],avgPoint[1],10)
+        c = self.regularPoly(k,avgPoint[0],avgPoint[1],10) #return centroids more or less evenly spaced around the center of the data
         return c
+
     def closest_centroid(self,points, centroids):
         '''returns an array containing the index to the nearest centroid for each point'''
         distances = np.sqrt(((points - centroids[:, np.newaxis])**2).sum(axis=2))
         return np.argmin(distances, axis=0)
+
     def move_centroids(self,points, closest, centroids):
         '''returns the new centroids assigned from the points closest to them'''
         c = np.array([points[closest==k].mean(axis=0) for k in range(centroids.shape[0])])
         return np.nan_to_num(c)
+
     def getClusters(self, points, k):
         '''returns list with group num'''
         #do k means
